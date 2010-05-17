@@ -1,51 +1,70 @@
+<!-- London Underground Customizable Status for Chrome
+    ~ jaymz 2010 - http://jaymz.eu for more stuff. mail me at jaymz@jaymz.eu
+
+    MIT licensed - get copy here: http://www.opensource.org/licenses/mit-license.php
+-->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
 <style>
 body {
-    min-width:357px;
+    min-width:240px;
     overflow-x:hidden;
-    background-color:#f6ff00;
+    background-color:#fff;
+    color:#000;
+    font-family:Verdana;
+    font-size:0.7em;
+}
+span.tube-line {
+    display:inline-block;
+    width:50px;
+    height:50px;
+    margin:3px;
+    float:left;
+    padding:5px;
 }
 
-img {
-    margin:5px;
-    border:2px solid black;
-    vertical-align:middle;
-    width:75px;
-    height:75px;
+/* YAY! tube colors are pretty */
+#victoria {
+    background:#009fe0;
 }
+#northern {
+    color:#fff;
+    background:#000;
+}
+#central {
+    background:#e41f1f;
+}
+
 </style>
 
-<script>
-var req = new XMLHttpRequest();
-req.open(
-    "GET",
-    "http://api.flickr.com/services/rest/?" +
-        "method=flickr.photos.search&" +
-        "api_key=90485e931f687a9b9c2a66bf58a3861a&" +
-        "text=hello%20world&" +
-        "safe_search=1&" +  // 1 is "safe"
-        "content_type=1&" +  // 1 is "photos only"
-        "sort=relevance&" +  // another good one is "interestingness-desc"
-        "per_page=20",
-    true);
-req.onload = showPhotos;
-req.send(null);
+<script type="text/javascript">
 
-function showPhotos() {
-  var photos = req.responseXML.getElementsByTagName("photo");
-
-  for (var i = 0, photo; photo = photos[i]; i++) {
-    var img = document.createElement("image");
-    img.src = constructImageURL(photo);
-    document.body.appendChild(img);
-  }
+function ltag(lineData) {
+    /* returns the formatted version of the response */
+    return '<span class="tube-line" id="'+lineData.name.toLowerCase()+'">'+lineData.status+'</span>';
 }
 
-// See: http://www.flickr.com/services/api/misc.urls.html
-function constructImageURL(photo) {
-  return "http://farm" + photo.getAttribute("farm") +
-      ".static.flickr.com/" + photo.getAttribute("server") +
-      "/" + photo.getAttribute("id") +
-      "_" + photo.getAttribute("secret") +
-      "_s.jpg";
-}
+$(document).ready(function() {
+    /* Grab our data from tubeupdates and set it */
+    $.ajax({
+        url : 'http://api.tubeupdates.com/',
+        data : 'method=get.status&lines=northern,victoria',
+        dataType : 'json',
+        success : function(result) {
+            var total = result.response.lines.length;
+            var output = "";
+            for(var i=0; i<total; i++) {
+                output += ltag(result.response.lines[i]);
+            }
+            $('#content').html(output);
+        }
+        
+    });
+});
 </script>
+
+<body>
+    <h2>Current status:</h2>
+    <p>You're current lines are:</p>
+    <div id="content"></div>
+</body>

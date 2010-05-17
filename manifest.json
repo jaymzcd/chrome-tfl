@@ -10,6 +10,7 @@
     "background_page" : "background.html"
   },
   "permissions": [
-    "http://api.tubeupdates.com/"
+    "http://api.tubeupdates.com/",
+    "http://ajax.googleapis.com/"
   ]
 }
