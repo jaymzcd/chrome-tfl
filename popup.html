@@ -7,48 +7,99 @@
 
 <style>
 body {
-    min-width:240px;
+    min-width:270px;
     overflow-x:hidden;
     background-color:#fff;
     color:#000;
     font-family:Verdana;
     font-size:0.7em;
 }
-span.tube-line {
+div.tube-line {
     display:inline-block;
     width:50px;
     height:50px;
     margin:3px;
     float:left;
     padding:5px;
+    font-size:0.7em;
+    font-weight:bold;
+    text-align:center;
+    text-transform:uppercase;
+    color:#fff;
 }
-
+span.status-icon {
+    display:block;
+    font-size:3.5em;
+    font-weight:bold;
+    font-family:Arial;
+}
 /* YAY! tube colors are pretty */
 #victoria {
     background:#009fe0;
 }
 #northern {
-    color:#fff;
     background:#000;
 }
 #central {
     background:#e41f1f;
 }
-
+#circle {
+    background:#f8d42d;
+    color:#960;
+}
+#district {
+    background:#00a575;
+}
+#jubilee {
+    background:#8f989e;
+}
+#metropolitan {
+    background:#893267;
+}
+#bakerloo {
+    background:#ae6118;
+}
+#piccadilly {
+    background:#0450a1;
+    color:#68b3ff;
+}
+#hammersmithcity {
+    background:#e899a8;
+    color:#452d32;
+}
+#waterloocity {
+    background:#ff6600;
+}
+p {
+    clear:both;
+}
 </style>
 
 <script type="text/javascript">
 
 function ltag(lineData) {
     /* returns the formatted version of the response */
-    return '<span class="tube-line" id="'+lineData.name.toLowerCase()+'">'+lineData.status+'</span>';
+    var statusSymbol = "&#x263A;" // smiley face in unicode
+    if (lineData.status=="part suspended") {
+        statusSymbol = "&#x2639;" // sad face
+    }
+    if (lineData.status=="planned closure") {
+        lineData.status = "plan. closed";
+        statusSymbol = "&#x2692;";
+    }
+    return '<div class="tube-line" id="'+lineData.name.replace(" &amp; ", "").toLowerCase()+
+        '">'+lineData.status+'<span class="status-icon">'+statusSymbol+'</span></div>';
 }
 
+var lines = ["northern", "victoria", "central", "district", 
+    "circle", "metropolitan", "hammersmithcity", "bakerloo",
+    "jubilee", "picadilly"];
+    
 $(document).ready(function() {
     /* Grab our data from tubeupdates and set it */
     $.ajax({
         url : 'http://api.tubeupdates.com/',
-        data : 'method=get.status&lines=northern,victoria',
+        data : 'method=get.status&lines=tube',
         dataType : 'json',
         success : function(result) {
             var total = result.response.lines.length;
@@ -56,6 +107,7 @@ $(document).ready(function() {
             for(var i=0; i<total; i++) {
                 output += ltag(result.response.lines[i]);
             }
+            $('#timestamp').html(result.response.lines[0].status_requested);
             $('#content').html(output);
         }
         
@@ -65,6 +117,7 @@ $(document).ready(function() {
 
 <body>
     <h2>Current status:</h2>
-    <p>You're current lines are:</p>
+    <p>This is what TFL had to say for itself at <span id="timestamp"></span></p>
     <div id="content"></div>
+    <p>Enjoy the journey home! <a href="http://www.tfl.gov.uk/tfl/livetravelnews/realtime/tube/default.html">Full status</a> (via TFL).</p>
 </body>
