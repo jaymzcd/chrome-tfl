@@ -1,17 +1,18 @@
 {
-  "name": "Tubeme",
-  "version": "0.2",
-  "description": "Grabs the current TFL/London tube data, customizable update time.",
-   "icons": { "128": "tflicon.png" },
-  "browser_action": {
-    "default_icon": "icon.png",
-    "default_badge" : "1",
-    "default_title" : "So how bad is it?",
-    "popup" : "popup.html",
-    "background_page" : "background.html"
-  },
-  "permissions": [
-    "http://api.tubeupdates.com/",
-    "http://ajax.googleapis.com/"
-  ]
+    "name": "Tube Me",
+    "version": "0.2",
+    "description": "Grabs the current TFL/London tube data, customizable line display, background updating at a certain time.",
+    "icons": { "128": "tflicon.png" },
+    "options_page" : "options.html",
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_badge" : "1",
+        "default_title" : "So how bad is it?",
+        "popup" : "popup.html",
+        "background_page" : "background.html"
+    },
+    "permissions": [
+        "http://api.tubeupdates.com/",
+        "http://ajax.googleapis.com/"
+    ]
 }

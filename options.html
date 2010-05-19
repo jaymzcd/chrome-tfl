@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>Tube Me > Options</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <style type="text/css">
+        @import url("http://github.com/joshuaclayton/blueprint-css/raw/master/blueprint/screen.css");
+
+        body {
+            min-width:280px;
+            overflow-x:hidden;
+            background-color:#fff;
+            color:#000;
+            font-family:Verdana;
+            font-size:0.7em;
+            margin:50px auto;
+            background-color:#ededed;
+        }
+        div.content {
+            background-color:#fff;
+            -webkit-border-radius:30px;
+            padding:30px;
+            margin-bottom:20px;
+            border:solid 2px #ddd;
+        }
+        div#header {
+            background-color:#2f93c6;
+        }
+        h1 {
+            color:#fff;
+            text-shadow: 0px 1px 0px #000;
+            display:inline-block;
+            margin-top:30px;
+            margin-left:20px;
+            font-size:60px;
+        }
+        img#logo {
+            float:left;
+            display:inline-block;
+        }
+        form#options {
+            clear:both;
+        }
+        label {
+            margin-right:1em;
+        }
+        fieldset#display input {
+            width:4em;
+        }
+        fieldset#lines span {
+            float:left;
+            margin-right:1em;
+        }
+
+        
+        div.tube-line {
+            display:inline-block;
+            width:50px;
+            height:50px;
+            margin:3px;
+            float:left;
+            padding:5px;
+            font-size:0.7em;
+            font-weight:bold;
+            text-align:center;
+            text-transform:uppercase;
+            color:#fff;
+            border:solid 2px #fff;
+            -webkit-box-shadow: 0 3px 4px #aaa;
+            -webkit-border-radius:5px;
+        }
+        span.status-icon {
+            text-shadow: 1px 1px 1px #222;
+            display:block;
+            font-size:4.5em;
+            font-weight:bold;
+            font-family:Arial;
+        }
+        /* YAY! tube colors are pretty */
+        #victoria {
+            background:#009fe0;
+        }
+        #northern {
+            background:#000;
+        }
+        #central {
+            background:#e41f1f;
+        }
+        #circle {
+            background:#f8d42d;
+            color:#960;
+        }
+        #district {
+            background:#00a575;
+        }
+        #jubilee {
+            background:#8f989e;
+        }
+        #metropolitan {
+            background:#893267;
+        }
+        #bakerloo {
+            background:#ae6118;
+        }
+        #piccadilly {
+            background:#0450a1;
+            color:#68b3ff;
+        }
+        #hammersmithcity {
+            background:#e899a8;
+            color:#452d32;
+        }
+        #waterloocity {
+            background:#70c3ce;
+        }
+        p {
+            clear:both;
+        }
+    </style>
+</head>
+<body onload="restore_options()" id="tubeme-options">
+    <script type="text/javascript">
+        var lines = ["northern", "victoria", "central", "district",
+            "circle", "metropolitan", "hammersmithcity", "bakerloo",
+            "jubilee", "piccadilly"];
+            
+        $(document).ready(function() {
+            $('#logo').attr('src', chrome.extension.getURL("tflicon.png"));
+        });
+        
+        function save_options() {
+            var select = document.getElementById("color");
+            var color = select.children[select.selectedIndex].value;
+            localStorage["favorite_color"] = color;
+
+            // Update status to let user know options were saved.
+            var status = document.getElementById("status");
+            status.innerHTML = "Options Saved.";
+            setTimeout(function() {
+                status.innerHTML = "";
+            }, 750);
+        }
+
+        function restore_options() {
+                var favorite = localStorage["favorite_color"];
+                if (!favorite) {
+                    return;
+                }
+                var select = document.getElementById("color");
+                for (var i = 0; i < select.children.length; i++) {
+                    var child = select.children[i];
+                    if (child.value == favorite) {
+                    child.selected = "true";
+                    break;
+                }
+            }
+        }
+        
+    </script>
+    <div class="container">
+        <div class="span-16 append-4 prepend-4">
+            <div class="content" id="header">
+                <img id="logo" /><h1>Options</h1>
+            </div>
+            <div class="content">
+                <form id="options">
+                    <fieldset id="lines">
+                        <legend>Choose which lines to show</legend>
+                        <span><input type="checkbox" value="bakerloo" />Bakerloo</span>
+                        <span><input type="checkbox" value="central" />Central</span>
+                        <span><input type="checkbox" value="circle" />Circle</span>
+                        <span><input type="checkbox" value="district" />District</span>
+                        <span><input type="checkbox" value="hammersmithcity" />Hammersmith &amp; City</span>
+                        <span><input type="checkbox" value="jubilee" />Jubilee</span>
+                        <span><input type="checkbox" value="metropolitan" />Metropolitan</span>
+                        <span><input type="checkbox" value="northern" />Northern</span>
+                        <span><input type="checkbox" value="piccadilly" />Piccadilly</span>
+                        <span><input type="checkbox" value="victoria" />Victoria</span>
+                        <span><input type="checkbox" value="waterloocity" />Waterloo &amp; City</span>
+                    </fieldset>
+                    <fieldset id="timings">
+                        <legend>Timing &amp; alerts</legend>
+                        <p><label for="update_time">Update interval</label><input type="text" value="15" /> (minutes)<super>*</super></p>
+                        <p><label for="specific_time">Check at these specific times</label><input type="text" value="07:30, 17:30" name="specific_time" /></p>
+                        <p><label for="use_badge">Show an alert when a line is not running well</label><input type="checkbox" name="use_badge" /></p>
+                        <blockquote><p>This extension has a timer that will fire each minute. It checks in that timer if the current time is due an update automatically (if enabled) or if the current time is the specific times here and will update accordingly.</p>
+                        <p>* Please avoid making this a small number, the API this extension uses is a free and public resource.</p></blockquote>
+                    </fieldset>
+                    <fieldset id="display">
+                        <legend>Customize status icons</legend>
+                        <label for="good">Good</label><input name="good" type="text" value="" />
+                        <label for="good">Minor Delays</label><input name="minor_delays" type="text" value="" />
+                        <label for="good">Severe Delays</label><input name="severe_delays" type="text" value="" />
+                        <label for="good">Part Closure</label><input name="part_closure" type="text" value="" />
+                        <label for="good">Suspended</label><input name="suspended" type="text" value="" />
+                        <label for="good">Planned Closure</label><input name="planned_closure" type="text" value="" />
+                    </fieldset>
+                    <button onclick="save_options()">Save</button>
+                </form>
+                <blockquote>
+                    <p>Tube Me written by Jaymz Campbell (<a href="http://jaymz.eu/">jaymz.eu</a>). Icons by
+                    Nicolas Combes (<a href="http://www.noirfluo.com/">noirfluo.com</a>). Uses the
+                    <a href="http://tubeupdates.com/">tubeupdates.com</a> API for data by <a href="http://bendodson.com/">Ben
+                    Dodson</a>. This extension is not affilated with <a href="http://www.tfl.gov.uk">TFL</a> in any way.</p>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

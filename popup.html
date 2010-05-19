@@ -7,7 +7,7 @@
 
 <style>
 body {
-    min-width:270px;
+    min-width:280px;
     overflow-x:hidden;
     background-color:#fff;
     color:#000;
@@ -26,10 +26,14 @@ div.tube-line {
     text-align:center;
     text-transform:uppercase;
     color:#fff;
+    border:solid 2px #fff;
+    -webkit-box-shadow: 0 3px 4px #aaa;
+    -webkit-border-radius:5px;
 }
 span.status-icon {
+    text-shadow: 1px 1px 1px #222;
     display:block;
-    font-size:3.5em;
+    font-size:4.5em;
     font-weight:bold;
     font-family:Arial;
 }
@@ -68,7 +72,7 @@ span.status-icon {
     color:#452d32;
 }
 #waterloocity {
-    background:#ff6600;
+    background:#70c3ce;
 }
 p {
     clear:both;
@@ -84,17 +88,22 @@ function ltag(lineData) {
         statusSymbol = "&#x2639;" // sad face
     }
     if (lineData.status=="planned closure") {
-        lineData.status = "plan. closed";
-        statusSymbol = "&#x2692;";
+        statusSymbol = "&#x2692;"; // hammer & pick
+    }
+    if (lineData.status=="severe delays") {
+        statusSymbol = "&#x2620;"; // skull & crossbons
+    }
+    if (lineData.status=="minor delays") {
+        statusSymbol = "&#x26A0;"; // warning sign
     }
     return '<div class="tube-line" id="'+lineData.name.replace(" &amp; ", "").toLowerCase()+
         '">'+lineData.status+'<span class="status-icon">'+statusSymbol+'</span></div>';
 }
 
-var lines = ["northern", "victoria", "central", "district", 
+var lines = ["northern", "victoria", "central", "district",
     "circle", "metropolitan", "hammersmithcity", "bakerloo",
     "jubilee", "picadilly"];
-    
+
 $(document).ready(function() {
     /* Grab our data from tubeupdates and set it */
     $.ajax({
@@ -110,7 +119,7 @@ $(document).ready(function() {
             $('#timestamp').html(result.response.lines[0].status_requested);
             $('#content').html(output);
         }
-        
+
     });
 });
 </script>
